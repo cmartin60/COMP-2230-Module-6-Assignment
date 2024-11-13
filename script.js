@@ -103,21 +103,20 @@ document.addEventListener("DOMContentLoaded", function () {
     function handleFormSubmit(event) {
         event.preventDefault();
         //... form submission logic including setting cookies and calculating score
-        const username = getCookie("username"); // Check for existing username
-
-        // If no username is set, get the username from the input and save it as a new cookie
+        // Check if a username cookie is set
+        let username = getCookie("username");
         if (!username) {
-            const usernameInput = document.getElementById("username").value.trim();
-            if (usernameInput) {
-                setCookie("username", usernameInput, 7); // Save username for 7 days
-            }
+            username = document.getElementById("username").value;
+            setCookie("username", username, 7); // Save username for 7 days
         }
 
-        // Placeholder for calculating and saving the score
-        const score = calculateScore(); // This will be defined in the next step
-        saveScore(username || document.getElementById("username").value, score);
+        // Calculate score
+        const score = calculateScore();
 
-        // Refresh the game with new questions
+        // Save score to localStorage or other storage
+        saveScore(username, score);
+
+        // Fetch new questions to refresh the game
         fetchQuestions();
     }
     function checkUsername() {
@@ -182,8 +181,23 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("new-player").classList.add("hidden"); // Hide the new player button
         document.getElementById("submit-game").disabled = false; // Enable the submit button if needed
     }
+    /**
+     * Calculates the user's score based on selected answers.
+     * @returns {number} The total score based on correct answers.
+     */
     function calculateScore() {
-        //... code for calculating the score
+        let score = 0;
+        const questions = document.querySelectorAll("#question-container div");
+
+        questions.forEach((questionDiv) => {
+            const selectedOption = questionDiv.querySelector("input[type='radio']:checked");
+            
+            if (selectedOption && selectedOption.dataset.correct === "true") {
+                score += 1; // Increase score by 1 for each correct answer
+            }
+        });
+
+        return score;
     }
     function displayScores() {
         //... code for displaying scores from localStorage
