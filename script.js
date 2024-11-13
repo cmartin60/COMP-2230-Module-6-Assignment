@@ -154,6 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         return null; // Return null if the cookie is not found
+
     }
     function saveScore(username, score) {
         //... code for saving the score to localStorage
