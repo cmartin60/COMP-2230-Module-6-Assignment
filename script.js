@@ -113,8 +113,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // Calculate score
         const score = calculateScore();
 
-        // Save score to localStorage or other storage
+        // Save score to localStorage
         saveScore(username, score);
+
+        // Display updated scores
+        displayScores();
 
         // Fetch new questions to refresh the game
         fetchQuestions();
@@ -168,8 +171,23 @@ document.addEventListener("DOMContentLoaded", function () {
         return null; // Return null if the cookie is not found
 
     }
+    /**
+     * Saves the user's score in localStorage.
+     * @param {string} username - The name of the player.
+     * @param {number} score - The score achieved by the player.
+     */
     function saveScore(username, score) {
-        //... code for saving the score to localStorage
+        // Retrieve existing scores from localStorage or initialize an empty array if none exist
+        let scores = JSON.parse(localStorage.getItem("triviaScores")) || [];
+
+        // Create a new score entry
+        const scoreEntry = { username, score, date: new Date().toISOString() };
+
+        // Add the new score entry to the array
+        scores.push(scoreEntry);
+
+        // Save the updated scores array back to localStorage
+        localStorage.setItem("triviaScores", JSON.stringify(scores));
     }
     function newPlayer() {
         //... code for clearing the username cookie and updating the UI
@@ -201,5 +219,31 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     function displayScores() {
         //... code for displaying scores from localStorage
+        const scores = JSON.parse(localStorage.getItem("triviaScores")) || [];
+
+        // Get the table body element to populate with scores
+        const scoreTableBody = document.querySelector("#score-table tbody");
+    
+        // Clear any existing rows in the table body
+        scoreTableBody.innerHTML = "";
+    
+        // Populate the table with scores
+        scores.forEach((entry) => {
+            // Create a new row for each score entry
+            const row = document.createElement("tr");
+    
+            // Create and populate cells for username and score
+            const usernameCell = document.createElement("td");
+            usernameCell.textContent = entry.username;
+            const scoreCell = document.createElement("td");
+            scoreCell.textContent = entry.score;
+    
+            // Append cells to the row
+            row.appendChild(usernameCell);
+            row.appendChild(scoreCell);
+    
+            // Append the row to the table body
+            scoreTableBody.appendChild(row);
+        });
     }
 });
