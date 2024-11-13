@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const newPlayerButton = document.getElementById("new-player");
 
     // Initialize the game
-    // checkUsername(); Uncomment once completed
+    checkUsername();
     fetchQuestions();
     displayScores();
 
@@ -110,19 +110,26 @@ document.addEventListener("DOMContentLoaded", function () {
         // Save the username as a cookie with a 7-day expiration
         setCookie("username", username, 7);
         }
+
+        // Call checkUsername to update the UI after submission
+        checkUsername();
     }
     function checkUsername() {
         //... code for checking if a username cookie is set and adjusting the UI
         const username = getCookie("username");
-
         if (username) {
-            // If the cookie exists, display the username and possibly hide the input field
-            document.getElementById("username").value = username;
-            document.getElementById("new-player").classList.remove("hidden"); // Show new player button
+            // Hide the username input and show the "New Player" button
+            document.getElementById("username").classList.add("hidden");
+            document.getElementById("new-player").classList.remove("hidden");
+            
+            // Optionally, display a greeting or welcome back message
+            const greeting = document.createElement("p");
+            greeting.textContent = `Welcome back, ${username}!`;
+            document.getElementById("game-container").insertBefore(greeting, document.getElementById("trivia-form"));
         } else {
-            // If no username cookie, show the input field for username
-            document.getElementById("username").value = "";
-            document.getElementById("new-player").classList.add("hidden"); // Hide new player button
+            // Show the username input and hide the "New Player" button
+            document.getElementById("username").classList.remove("hidden");
+            document.getElementById("new-player").classList.add("hidden");
         }
     }
     /**
