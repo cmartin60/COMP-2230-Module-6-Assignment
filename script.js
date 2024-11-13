@@ -103,16 +103,22 @@ document.addEventListener("DOMContentLoaded", function () {
     function handleFormSubmit(event) {
         event.preventDefault();
         //... form submission logic including setting cookies and calculating score
-        const username = document.getElementById("username").value;
-    
-        // Check if the username is provided and it's not the same as the one in the cookie
-        if (username && username !== getCookie("username")) {
-        // Save the username as a cookie with a 7-day expiration
-        setCookie("username", username, 7);
+        const username = getCookie("username"); // Check for existing username
+
+        // If no username is set, get the username from the input and save it as a new cookie
+        if (!username) {
+            const usernameInput = document.getElementById("username").value.trim();
+            if (usernameInput) {
+                setCookie("username", usernameInput, 7); // Save username for 7 days
+            }
         }
 
-        // Call checkUsername to update the UI after submission
-        checkUsername();
+        // Placeholder for calculating and saving the score
+        const score = calculateScore(); // This will be defined in the next step
+        saveScore(username || document.getElementById("username").value, score);
+
+        // Refresh the game with new questions
+        fetchQuestions();
     }
     function checkUsername() {
         //... code for checking if a username cookie is set and adjusting the UI
