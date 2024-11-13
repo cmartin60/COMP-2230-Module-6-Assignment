@@ -103,23 +103,28 @@ document.addEventListener("DOMContentLoaded", function () {
     function handleFormSubmit(event) {
         event.preventDefault();
         //... form submission logic including setting cookies and calculating score
-        // Check if a username cookie is set
+        // Check if a username cookie already exists
         let username = getCookie("username");
+
+        // If no username is found, set it from the input field or default to "Anonymous"
         if (!username) {
-            username = document.getElementById("username").value;
-            setCookie("username", username, 7); // Save username for 7 days
+            username = document.getElementById("username").value || "Anonymous";
+            setCookie("username", username, 7); // Store the username cookie for 7 days
         }
 
-        // Calculate score
+        // Calculate the current score based on the user's answers
         const score = calculateScore();
 
-        // Save score to localStorage
+        // Save the score along with the username to localStorage
         saveScore(username, score);
 
-        // Display updated scores
+        // Update the scores table to reflect the new score
         displayScores();
 
-        // Fetch new questions to refresh the game
+        // Check for username cookie again to adjust the UI (e.g., hide username input if needed)
+        checkUsername();
+
+        // Fetch new questions to start another round of the trivia game
         fetchQuestions();
     }
     function checkUsername() {
